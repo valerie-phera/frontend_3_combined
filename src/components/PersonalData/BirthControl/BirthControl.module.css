@@ -1,0 +1,48 @@
+.wrap {
+    display: block;
+    position: relative;
+    padding: 20px 16px 20px 16px;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 12px;
+
+    max-height: 700px;
+    opacity: 1;
+    overflow: hidden;
+
+    transition:
+        max-height 280ms ease,
+        opacity 200ms ease,
+        padding-top 200ms ease;
+}
+
+.collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding-top: 0;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 249px;
+}
+
+.heading {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--main-color-secondary);
+}
+
+
+
+
