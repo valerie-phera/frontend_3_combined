@@ -1,0 +1,25 @@
+.wrapper {
+    width: 100%;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.wrapHeading {
+    display: flex;
+    gap: 7px;
+    align-items: center;
+    margin-top: 10px;
+    position: relative;
+}
+
+.heading {
+    font-family: 'Cooper Hewitt', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--main-color);
+    line-height: 1.3;
+}

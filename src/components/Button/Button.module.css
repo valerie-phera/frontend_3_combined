@@ -1,0 +1,24 @@
+.btn {
+    padding-top: 11.5px;
+    padding-bottom: 11.5px;
+    width: 100%;
+    font-family: "Open Sans", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 100px;
+    cursor: pointer;
+    background-color: var(--main-color);
+    color: #FFFFFF;
+    border: none;
+    transition: background-color 0.2s;
+}
+
+.btn:hover {
+    background-color: var(--main-color);
+    color: #fff;
+    border: none;
+}
+
+.btn:disabled:hover {
+    background-color: #D5D7DA;
+}

@@ -1,0 +1,19 @@
+.btn {
+    padding-top: 11.5px;
+    padding-bottom: 11.5px;
+    width: 100%;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 100px;
+    cursor: pointer;
+    background-color: transparent;
+    color: #1F1F1F;
+    border: 1px solid var(--main-color);
+    font-family: "Inter", sans-serif;
+}
+
+.btn:hover {
+    background-color: transparent;
+    color: var(--main-color);
+    border: 1px solid var(--main-color);
+}
