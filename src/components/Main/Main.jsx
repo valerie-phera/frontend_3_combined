@@ -76,7 +76,7 @@ const Main = () => {
                             <div className={styles.number}><span>3</span></div>
                             <div>
                                 <h4>Get Your Results</h4>
-                                <p>See your pH reading instantly with personalized guidance and export options.</p>
+                                <p>See your pH reading instantly with personalized guidance and export options..</p>
                             </div>
                         </div>
                     </div>
