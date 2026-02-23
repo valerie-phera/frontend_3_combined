@@ -165,7 +165,7 @@ const TrendPreviewNoResultsPage = () => {
                     </div>
                 </Container>
                 <BottomBlock>
-                    <Button onClick={() => navigate(data ? "/subscription" : "/steps")}>{data ? "Unlock my trends" : "Start new scan"}</Button>
+                    <Button onClick={() => navigate(data ? "/subscription" : "/camera-view")}>{data ? "Unlock my trends" : "Start new scan"}</Button>
                 </BottomBlock>
             </div>
         </>

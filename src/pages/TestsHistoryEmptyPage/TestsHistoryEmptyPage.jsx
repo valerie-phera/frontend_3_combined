@@ -25,7 +25,7 @@ const TestsHistoryEmptyPage = () => {
                     </div>
                 </Container>
                 <BottomBlock>
-                    <Button onClick={() => navigate("/steps")}>Start new scan</Button>
+                    <Button onClick={() => navigate("/camera-view")}>Start new scan</Button>
                 </BottomBlock>
             </div>
         </>

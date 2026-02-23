@@ -80,7 +80,7 @@ const HomeStartPage = () => {
             </p>
           </div>
           <div className={styles.btn}>
-            <Button onClick={() => navigate("/steps")}>Start new scan</Button>
+            <Button onClick={() => navigate("/camera-view")}>Start new scan</Button>
           </div>
         </div>
 
