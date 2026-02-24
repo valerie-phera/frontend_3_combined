@@ -101,6 +101,14 @@
     position: relative;
 }
 
+.scaleMarker {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    transition: left 0.3s ease;
+}
+
 .scalePart1,
 .scalePart2,
 .scalePart3,

@@ -102,6 +102,14 @@
     position: relative;
 }
 
+.scaleMarker {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    transition: left 0.3s ease;
+}
+
 .scalePart1,
 .scalePart2,
 .scalePart3,
@@ -266,60 +274,6 @@
     cursor: pointer;
     display: flex;
     align-items: center;
-}
-
-.titleSecondary {
-    font-family: 'Cooper Hewitt', sans-serif;
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--main-color);
-    text-align: center;
-}
-
-.wrapLearnMore {
-    display: flex;
-}
-
-.img {
-    width: 127px;
-    height: 164px;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-    overflow: hidden;
-    flex-shrink: 0;
-}
-
-.img img {
-    width: 100%;
-    height: auto;
-    display: block;
-}
-
-.learnMore {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 12px 8px 0 18px;
-    background: #FFFFFF;
-}
-
-.learnMoreTitle {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--main-color);
-    line-height: 1.3;
-}
-
-.learnMoreText {
-    font-size: 12px;
-    line-height: 1.3;
-}
-
-.learnMoreLink {
-    font-size: 14px;
-    font-weight: 600;
-    color: #1F1F1F;
-    margin-top: 8px;
 }
 
 @media (max-width: 393px) {

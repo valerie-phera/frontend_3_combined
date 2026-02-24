@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import BottomBlock from "../../components/BottomBlock/BottomBlock";
@@ -6,18 +6,29 @@ import Button from "../../components/Button/Button";
 import Container from "../../components/Container/Container";
 
 import ArrowDownGrey from "../../assets/icons/ArrowDownGrey";
-import learnMore from "../../assets/images/learnMore.jpg"
 import EditNotesGrey from "../../assets/icons/EditNotesGrey";
 import CheckIcon from "../../assets/icons/CheckIcon";
 import DownloadIcon from "../../assets/icons/DownloadIcon";
 import ShareIcon from "../../assets/icons/ShareIcon";
 import ScaleMarker from "../../assets/icons/ScaleMarker";
+
+import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
+import { saveAs } from "file-saver";
 import styles from "./ResultWithDetailsPageNormal.module.css";
 
 const ResultWithDetailsPageNormal = () => {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
     const { state } = useLocation();
+    const phValue = state?.phValue;
+    const phLevel = state?.phLevel;
+    const timestamp = state?.timestamp;
+
+    useEffect(() => {
+        if (!phValue) {
+            navigate("/result-without-details");
+        }
+    }, [state, navigate]);
 
     const birthControlValues = state?.birthControl
         ? Object.values(state.birthControl).filter(Boolean)
@@ -57,6 +68,80 @@ const ResultWithDetailsPageNormal = () => {
         <div key={item} className={styles.item}>{item}</div>
     ));
 
+    const exportPdf = async (phValue, phLevel, date) => {
+        const pdfDoc = await PDFDocument.create();
+        const page = pdfDoc.addPage([600, 800]);
+
+        const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+        // === 1. Headline ===
+        page.drawText("Vaginal pH Report", {
+            x: 50,
+            y: 750,
+            size: 26,
+            font,
+            color: rgb(0, 0, 0.2),
+        });
+
+        // === 2. pH data ===
+        page.drawText(`pH Value: ${phValue}`, { x: 50, y: 700, size: 16, font });
+        page.drawText(`Level: ${phLevel}`, { x: 50, y: 670, size: 16, font });
+
+        // === 3. Date ===
+        let dateObj;
+        if (!date) {
+            dateObj = new Date(); // if there is no date - current
+        } else {
+            dateObj = new Date(date);
+            if (isNaN(dateObj.getTime())) dateObj = new Date(); // if the line is incorrect, it is the current one
+        }
+
+        page.drawText(
+            `Generated at: ${dateObj.toLocaleString()}`,
+            { x: 50, y: 640, size: 12, font, color: rgb(0.1, 0.1, 0.1) }
+        );
+
+        // === 4. Interpretation ===
+        const interpretation =
+            phLevel === "Low"
+                ? "Your result indicates acidic vaginal environment below the typical range."
+                : phLevel === "Normal"
+                    ? "Your result is within healthy vaginal pH range."
+                    : "Your result is elevated, which can indicate imbalance or infection symptoms.";
+
+        page.drawText("Interpretation:", { x: 50, y: 610, size: 14, font });
+        page.drawText(interpretation, { x: 50, y: 585, size: 12, font, maxWidth: 500 });
+
+        // === 5. pH color scale ===
+        // const scaleX = 50;
+        // const scaleY = 550;
+        // const scaleWidth = 500;
+        // const scaleHeight = 20;
+
+        // const drawColorRect = (x, w, color) =>
+        //     page.drawRectangle({ x, y: scaleY, width: w, height: scaleHeight, color });
+
+        // drawColorRect(scaleX, scaleWidth * 0.33, rgb(1, 0.3, 0.3)); // Low
+        // drawColorRect(scaleX + scaleWidth * 0.33, scaleWidth * 0.34, rgb(0.3, 1, 0.3)); // Normal
+        // drawColorRect(scaleX + scaleWidth * 0.67, scaleWidth * 0.33, rgb(1, 0.8, 0.3)); // Elevated
+
+        // === 6. Footer ===
+        page.drawText(
+            "pHera • Empowering vaginal health through accessible testing",
+            { x: 50, y: 50, size: 10, font, color: rgb(0.3, 0.3, 0.3) }
+        );
+
+        // === 7. Saving PDF ===
+        const pdfBytes = await pdfDoc.save();
+        const blob = new Blob([pdfBytes], { type: "application/pdf" });
+        saveAs(blob, "ph-report.pdf");
+    };
+
+    const minPh = 4.0;
+    const maxPh = 7.0;
+
+    const markerPos = ((phValue - minPh) / (maxPh - minPh)) * 100;
+
     return (
         <>
             <div className={styles.content} data-scroll-container>
@@ -67,21 +152,22 @@ const ResultWithDetailsPageNormal = () => {
                             <div className={styles.visualBlockTop}>
                                 <div className={styles.levelPh}>
                                     <CheckIcon />
-                                    <p className={styles.levelPhText}>Normal pH</p>
+                                    <p className={styles.levelPhText}>{phLevel} pH</p>
                                 </div>
                                 <div className={styles.actions}>
                                     <div className={styles.actionsInner}><DownloadIcon /></div>
                                     <div className={styles.actionsInner}><ShareIcon /></div>
                                 </div>
                             </div>
-                            <div className={styles.num}>7.35</div>
-                            <div className={styles.date}>12.06.25 | 8:23 PM</div>
+                            <div className={styles.num}>{phValue}</div>
+                            <div className={styles.date}>{timestamp}</div>
                             <div className={styles.scale}>
-                                <div className={styles.scalePart1}><ScaleMarker className={styles.scaleMarker} /></div>
+                                <div className={styles.scalePart1}></div>
                                 <div className={styles.scalePart2}></div>
                                 <div className={styles.scalePart3}></div>
                                 <div className={styles.scalePart4}></div>
                                 <div className={styles.scalePart5}></div>
+                                <ScaleMarker className={styles.scaleMarker} style={{ left: `${markerPos}%` }} />
                             </div>
                             <div className={styles.meaning}>
                                 <p>Low</p>
@@ -128,25 +214,11 @@ const ResultWithDetailsPageNormal = () => {
                                     </div>
                                 </div>
                             </div>
-                            <h2 className={styles.titleSecondary}>Learn more about your result</h2>
-                            <div className={styles.wrapLearnMore}>
-                                <div className={styles.img}><img src={learnMore} alt="Learn more" /></div>
-                                <div className={styles.learnMore}>
-                                    <div className={styles.learnMoreTitle}>
-                                        Why do I get yeast infections around my period?
-                                    </div>
-                                    <p className={styles.learnMoreText}>
-                                        Yeast infections are commonly associated with your period...
-                                    </p>
-                                    <a href="#" className={styles.learnMoreLink}>Learn more</a>
-                                </div>
-
-                            </div>
                         </div>
                     </div>
                 </Container>
                 <BottomBlock>
-                    <Button onClick={() => navigate("/signup")}>Save to my history</Button>
+                    <Button onClick={() => exportPdf(phValue, phLevel, timestamp)}>Export results</Button>
                 </BottomBlock>
             </div>
         </>

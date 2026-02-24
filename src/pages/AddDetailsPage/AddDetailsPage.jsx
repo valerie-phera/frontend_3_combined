@@ -12,6 +12,9 @@ import styles from "./AddDetailsPage.module.css";
 const AddDetailsPage = () => {
     const navigate = useNavigate();
     const { state } = useLocation();
+    const phValue = state?.phValue;
+    const phLevel = state?.phLevel;
+    const timestamp = state?.timestamp;
 
     // Pre-fill user details if they were passed from the previous screen
     // Otherwise initialize with empty/default values
@@ -93,6 +96,9 @@ const AddDetailsPage = () => {
                     <Button
                         onClick={() => navigate("/result-with-details-normal", {
                             state: {
+                                phValue,
+                                phLevel,
+                                timestamp,
                                 age,
                                 ethnicBackground,
                                 menstrualCycle,

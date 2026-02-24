@@ -8,9 +8,6 @@ import DownloadIcon from "../../assets/icons/DownloadIcon";
 import ShareIcon from "../../assets/icons/ShareIcon";
 import ScaleMarker from "../../assets/icons/ScaleMarker";
 
-import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
-import { saveAs } from "file-saver";
-
 import styles from "./ResultWithoutDetailsPage.module.css";
 
 const ResultWithoutDetailsPage = () => {
@@ -28,7 +25,7 @@ const ResultWithoutDetailsPage = () => {
             console.log("📊 Данные результата:", stateData);
         } else {
             console.warn("⚠️ Нет данных результата, перенаправление...");
-            navigate("/camera-access");
+            navigate("/");
         }
     }, [location, navigate]);
 
@@ -48,74 +45,10 @@ const ResultWithoutDetailsPage = () => {
     const phLevel = getPhLevel(phValue);
     const timestamp = resultData.date || new Date().toISOString();
 
-    const exportPdf = async (phValue, phLevel, date) => {
-        const pdfDoc = await PDFDocument.create();
-        const page = pdfDoc.addPage([600, 800]);
+    const minPh = 4.0;
+    const maxPh = 7.0;
 
-        const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-
-        // === 1. Headline ===
-        page.drawText("Vaginal pH Report", {
-            x: 50,
-            y: 750,
-            size: 26,
-            font,
-            color: rgb(0, 0, 0.2),
-        });
-
-        // === 2. pH data ===
-        page.drawText(`pH Value: ${phValue}`, { x: 50, y: 700, size: 16, font });
-        page.drawText(`Level: ${phLevel}`, { x: 50, y: 670, size: 16, font });
-
-        // === 3. Date ===
-        let dateObj;
-        if (!date) {
-            dateObj = new Date(); // if there is no date - current
-        } else {
-            dateObj = new Date(date);
-            if (isNaN(dateObj.getTime())) dateObj = new Date(); // if the line is incorrect, it is the current one
-        }
-
-        page.drawText(
-            `Generated at: ${dateObj.toLocaleString()}`,
-            { x: 50, y: 640, size: 12, font, color: rgb(0.1, 0.1, 0.1) }
-        );
-
-        // === 4. Interpretation ===
-        const interpretation =
-            phLevel === "Low"
-                ? "Your result indicates acidic vaginal environment below the typical range."
-                : phLevel === "Normal"
-                    ? "Your result is within healthy vaginal pH range."
-                    : "Your result is elevated, which can indicate imbalance or infection symptoms.";
-
-        page.drawText("Interpretation:", { x: 50, y: 610, size: 14, font });
-        page.drawText(interpretation, { x: 50, y: 585, size: 12, font, maxWidth: 500 });
-
-        // === 5. pH color scale ===
-        // const scaleX = 50;
-        // const scaleY = 550;
-        // const scaleWidth = 500;
-        // const scaleHeight = 20;
-
-        // const drawColorRect = (x, w, color) =>
-        //     page.drawRectangle({ x, y: scaleY, width: w, height: scaleHeight, color });
-
-        // drawColorRect(scaleX, scaleWidth * 0.33, rgb(1, 0.3, 0.3)); // Low
-        // drawColorRect(scaleX + scaleWidth * 0.33, scaleWidth * 0.34, rgb(0.3, 1, 0.3)); // Normal
-        // drawColorRect(scaleX + scaleWidth * 0.67, scaleWidth * 0.33, rgb(1, 0.8, 0.3)); // Elevated
-
-        // === 6. Footer ===
-        page.drawText(
-            "pHera • Empowering vaginal health through accessible testing",
-            { x: 50, y: 50, size: 10, font, color: rgb(0.3, 0.3, 0.3) }
-        );
-
-        // === 7. Saving PDF ===
-        const pdfBytes = await pdfDoc.save();
-        const blob = new Blob([pdfBytes], { type: "application/pdf" });
-        saveAs(blob, "ph-report.pdf");
-    };
+    const markerPos = ((phValue - minPh) / (maxPh - minPh)) * 100;
 
     return (
         <>
@@ -137,11 +70,12 @@ const ResultWithoutDetailsPage = () => {
                             <div className={styles.num}>{phValue.toFixed(2)}</div>
                             <div className={styles.date}>{timestamp}</div>
                             <div className={styles.scale}>
-                                <div className={styles.scalePart1}><ScaleMarker className={styles.scaleMarker} /></div>
+                                <div className={styles.scalePart1}></div>
                                 <div className={styles.scalePart2}></div>
                                 <div className={styles.scalePart3}></div>
                                 <div className={styles.scalePart4}></div>
                                 <div className={styles.scalePart5}></div>
+                                <ScaleMarker className={styles.scaleMarker} style={{ left: `${markerPos}%` }} />
                             </div>
                             <div className={styles.meaning}>
                                 <p>Low</p>
@@ -156,7 +90,7 @@ const ResultWithoutDetailsPage = () => {
                                 <h3 className={styles.heading}>Make this result more personal</h3>
                                 <p className={styles.text}>Want to understand why your pH looks like this? Add your age group, hormone status, background, and current symptoms to get more tailored insights.</p>
                                 <div className={styles.btnTop}>
-                                    <Button onClick={() => navigate("/add-details")}>Add my details</Button>
+                                    {/* <Button onClick={() => navigate("/add-details")}>Add my details</Button> */}
                                 </div>
                                 <p className={styles.info}>
                                     Your data stays private and is never shared without your consent
@@ -166,7 +100,21 @@ const ResultWithoutDetailsPage = () => {
                     </div>
                 </Container>
                 <BottomBlock>
-                    <Button onClick={() => exportPdf(phValue, phLevel, timestamp)}>Export results</Button>
+                    {/* <Button onClick={() => exportPdf(phValue, phLevel, timestamp)}>Export results</Button> */}
+                    {/* <Button onClick={() => navigate("/add-details")}>Add my details</Button> */}
+                    <Button
+                        onClick={() =>
+                            navigate("/add-details", {
+                                state: {
+                                    phValue,
+                                    phLevel,
+                                    timestamp,
+                                },
+                            })
+                        }
+                    >
+                        Add my details
+                    </Button>
                 </BottomBlock>
             </div>
         </>
