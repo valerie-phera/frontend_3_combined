@@ -15,6 +15,7 @@ const AddDetailsPage = () => {
     const phValue = state?.phValue;
     const phLevel = state?.phLevel;
     const timestamp = state?.timestamp;
+    const interpretation = state?.interpretation;
 
     // Pre-fill user details if they were passed from the previous screen
     // Otherwise initialize with empty/default values
@@ -99,6 +100,7 @@ const AddDetailsPage = () => {
                                 phValue,
                                 phLevel,
                                 timestamp,
+                                interpretation,
                                 age,
                                 ethnicBackground,
                                 menstrualCycle,

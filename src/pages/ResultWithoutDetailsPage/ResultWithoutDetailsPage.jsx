@@ -7,6 +7,7 @@ import CheckIcon from "../../assets/icons/CheckIcon";
 import DownloadIcon from "../../assets/icons/DownloadIcon";
 import ShareIcon from "../../assets/icons/ShareIcon";
 import ScaleMarker from "../../assets/icons/ScaleMarker";
+import { getInterpretation } from "../../shared/utils/getInterpretation";
 
 import styles from "./ResultWithoutDetailsPage.module.css";
 
@@ -35,8 +36,9 @@ const ResultWithoutDetailsPage = () => {
 
     // Map numerical pH value to descriptive category
     const getPhLevel = (ph) => {
-        if (ph < 5) return "Low";
-        if (ph >= 5 && ph <= 6) return "Normal";
+        if (ph < 4.8) return "Slightly Low";
+        if (ph >= 4.8 && ph <= 6) return "Normal";
+        if (ph >= 6.1 && ph <= 6.5) return "Slightly Elevated";
         return "Elevated";
     };
 
@@ -44,6 +46,7 @@ const ResultWithoutDetailsPage = () => {
     const phValue = resultData.phValue || 0.00;
     const phLevel = getPhLevel(phValue);
     const timestamp = resultData.date || new Date().toISOString();
+    const interpretation = getInterpretation(phLevel);
 
     const minPh = 4.0;
     const maxPh = 7.0;
@@ -84,13 +87,12 @@ const ResultWithoutDetailsPage = () => {
                             </div>
                         </div>
                         <div className={styles.textBlock}>
-                            <p className={styles.textResult}>This result suggests that your vaginal environment is in its usual balance. Your pH can still shift slightly with your cycle, sex, or products you use, but nothing in this reading looks concerning on its own.</p>
+                            <p className={styles.textResult}>{interpretation}</p>
 
                             <div className={styles.advice}>
-                                <h3 className={styles.heading}>Make this result more personal</h3>
+                                <h3 className={styles.heading}>Personalize results</h3>
                                 <p className={styles.text}>Want to understand why your pH looks like this? Add your age group, hormone status, background, and current symptoms to get more tailored insights.</p>
                                 <div className={styles.btnTop}>
-                                    {/* <Button onClick={() => navigate("/add-details")}>Add my details</Button> */}
                                 </div>
                                 <p className={styles.info}>
                                     Your data stays private and is never shared without your consent
@@ -100,8 +102,6 @@ const ResultWithoutDetailsPage = () => {
                     </div>
                 </Container>
                 <BottomBlock>
-                    {/* <Button onClick={() => exportPdf(phValue, phLevel, timestamp)}>Export results</Button> */}
-                    {/* <Button onClick={() => navigate("/add-details")}>Add my details</Button> */}
                     <Button
                         onClick={() =>
                             navigate("/add-details", {
@@ -109,6 +109,7 @@ const ResultWithoutDetailsPage = () => {
                                     phValue,
                                     phLevel,
                                     timestamp,
+                                    interpretation
                                 },
                             })
                         }

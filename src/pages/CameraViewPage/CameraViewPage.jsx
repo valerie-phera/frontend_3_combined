@@ -4,7 +4,6 @@ import Webcam from "react-webcam";
 import styles from "./CameraViewPage.module.css";
 
 import { useCameraReady } from "../../hooks/useCameraReady";
-import { addImage } from "../../shared/api/images-api";
 
 const CameraViewPage = () => {
     const webcamRef = useRef(null);
@@ -25,7 +24,38 @@ const CameraViewPage = () => {
             const video = webcamRef.current?.video;
             video?.srcObject?.getTracks().forEach(track => track.stop());
         };
-    }, []);
+    }, []);    
+
+    const simulatePhAnalysis = () => {
+        const randomStep = (min, max, step) => {
+            const range = max - min;
+            const steps = Math.round(range / step);
+            const randomSteps = Math.floor(Math.random() * (steps + 1));
+            return +(min + randomSteps * step).toFixed(1);
+        };
+
+        const phValue = randomStep(4.0, 7.0, 0.1);
+        const confidence = randomStep(92, 99, 1);
+
+        const now = new Date();
+
+        const day = String(now.getDate()).padStart(2, "0");
+        const month = String(now.getMonth() + 1).padStart(2, "0");
+        const year = String(now.getFullYear()).slice(-2);
+
+        let hours = now.getHours();
+        const minutes = String(now.getMinutes()).padStart(2, "0");
+        const ampm = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12 || 12;
+
+        const date = `${day}.${month}.${year} | ${hours}:${minutes} ${ampm}`;
+
+        return {
+            phValue,
+            confidence,
+            date
+        };
+    };
 
     const handleCapture = async () => {
         if (!webcamRef.current || isProcessing) return;
@@ -40,17 +70,9 @@ const CameraViewPage = () => {
 
             if (!screenshot) throw new Error("Screenshot failed");
 
-            const blob = await fetch(screenshot).then(r => r.blob());
-
-            const formData = new FormData();
-            formData.append("image", blob, "capture.png");
-
-            const res = await addImage(formData);
-
-            if (!res || res.error) throw new Error("Backend error");
+            const res = simulatePhAnalysis();
 
             setTimeout(() => {
-                // navigate("/result-without-details", { state: res });
                 navigate("/result-without-details", { state: { result: res } });
                 setIsProcessing(false);
             }, 1000);

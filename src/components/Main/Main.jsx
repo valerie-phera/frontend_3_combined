@@ -21,7 +21,6 @@ const Main = () => {
                     <p className={styles.subtitle}>Quick, private pH testing right from your phone. No lab visits, no waiting.</p>
                     <div className={styles.wrapBtn}>
                         <button className={styles.btn} onClick={handleTryDemo}>Try Demo</button>
-                        <button className={styles.btnTransparent}>Learn More</button>
                     </div>
                 </div>
                 <div className={styles.info}>
@@ -56,27 +55,27 @@ const Main = () => {
                     </div>
                 </div>
                 <div className={styles.description}>
-                    <h3>How it works</h3>
+                    <h3>How pHera testing works</h3>
                     <div className={styles.list}>
                         <div className={styles.item}>
                             <div className={styles.number}><span>1</span></div>
                             <div>
                                 <h4>Scan your kit</h4>
-                                <p>Use your phone to scan the QR code on your pHera test kit.</p>
+                                <p>Scan the QR code on your pHera box to start the test. This helps us identify your kit and guide you through the process.</p>
                             </div>
                         </div>
                         <div className={styles.item}>
                             <div className={styles.number}><span>2</span></div>
                             <div>
-                                <h4>Allow Camera Access</h4>
-                                <p>Grant one-time camera permission to read your test card.</p>
+                                <h4>Allow camera access</h4>
+                                <p>Give pHera one-time access to your camera, so it can scan your test-strip. pHera doesn’t take or save any photos - it checks the colors in real time to give you to give you a pH reading and simple context. </p>
                             </div>
                         </div>
                         <div className={styles.item}>
                             <div className={styles.number}><span>3</span></div>
                             <div>
                                 <h4>Get Your Results</h4>
-                                <p>See your pH reading instantly with personalized guidance and export options.</p>
+                                <p>After you scan your strip, we’ll process the color and show your pH result within seconds — along with a clear explanation.</p>
                             </div>
                         </div>
                     </div>
