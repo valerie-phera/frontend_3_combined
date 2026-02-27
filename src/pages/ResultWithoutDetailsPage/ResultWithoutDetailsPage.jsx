@@ -8,6 +8,8 @@ import DownloadIcon from "../../assets/icons/DownloadIcon";
 import ShareIcon from "../../assets/icons/ShareIcon";
 import ScaleMarker from "../../assets/icons/ScaleMarker";
 import { getInterpretation } from "../../shared/utils/getInterpretation";
+import useExportResults from "../../hooks/useExportResults";
+import useImportJson from "../../hooks/useImportJson";
 
 import styles from "./ResultWithoutDetailsPage.module.css";
 
@@ -15,6 +17,13 @@ const ResultWithoutDetailsPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [resultData, setResultData] = useState(null);
+    const { handleExport } = useExportResults();
+
+    const handleImportedData = (data) => {
+        console.log("📥 Импортировано:", data);
+    };
+
+    const { fileInputRef, handleImportClick, handleFileUpload } = useImportJson(handleImportedData);
 
     // Retrieve pH result passed from previous page.
     // If no result found (e.g. user reloaded page), redirect back to camera flow.
@@ -53,6 +62,17 @@ const ResultWithoutDetailsPage = () => {
 
     const markerPos = ((phValue - minPh) / (maxPh - minPh)) * 100;
 
+    const onExportClick = () => {
+        handleExport({
+            phValue,
+            phLevel,
+            timestamp,
+            interpretation,
+            detailOptions: [],
+            recommendations: []
+        });
+    };
+
     return (
         <>
             <div className={styles.content}>
@@ -66,8 +86,15 @@ const ResultWithoutDetailsPage = () => {
                                     <p className={styles.levelPhText}>{phLevel} pH</p>
                                 </div>
                                 <div className={styles.actions}>
-                                    <div className={styles.actionsInner}><DownloadIcon /></div>
-                                    <div className={styles.actionsInner}><ShareIcon /></div>
+                                    <div className={styles.actionsInner} onClick={handleImportClick}><DownloadIcon /></div>
+                                    <input
+                                        ref={fileInputRef}
+                                        type="file"
+                                        accept="application/json"
+                                        style={{ display: "none" }}
+                                        onChange={handleFileUpload}
+                                    />
+                                    <div className={styles.actionsInner} onClick={onExportClick}><ShareIcon /></div>
                                 </div>
                             </div>
                             <div className={styles.num}>{phValue.toFixed(2)}</div>

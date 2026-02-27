@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import BottomBlock from "../../components/BottomBlock/BottomBlock";
@@ -12,13 +12,11 @@ import DownloadIcon from "../../assets/icons/DownloadIcon";
 import ShareIcon from "../../assets/icons/ShareIcon";
 import ScaleMarker from "../../assets/icons/ScaleMarker";
 
-import { saveAs } from "file-saver";
-import JSZip from "jszip";
 import { getInterpretation } from "../../shared/utils/getInterpretation";
 import { getRecommendations } from "../../shared/utils/getRecomendations";
-import useExportPdf from "../../hooks/useExportPdf";
-import logo_PDF from "../../assets/logo_PDF.png";
 import useDetailsFromState from "../../hooks/useDetailsFromState";
+import useExportResults from "../../hooks/useExportResults";
+import useImportJson from "../../hooks/useImportJson";
 
 import styles from "./ResultWithDetailsPage.module.css";
 
@@ -31,7 +29,13 @@ const ResultWithDetailsPage = () => {
     const timestamp = state?.timestamp;
     const interpretation = getInterpretation(phLevel);
     const currentRecommendations = getRecommendations(phLevel);
-    const fileInputRef = useRef(null);
+    const { handleExport } = useExportResults();
+
+    const handleImportedData = (data) => {
+        console.log("📥 Импортировано:", data);
+    };
+
+    const { fileInputRef, handleImportClick, handleFileUpload } = useImportJson(handleImportedData);
 
     useEffect(() => {
         if (phValue === undefined || phValue === null) {
@@ -44,44 +48,8 @@ const ResultWithDetailsPage = () => {
         <div key={item} className={styles.item}>{item}</div>
     ));
 
-    const { exportPdf } = useExportPdf(logo_PDF);
-    const exportJson = (phValue, phLevel, timestamp, interpretation, detailOptions, recommendations) => {
-        return JSON.stringify(
-            {
-                phValue,
-                phLevel,
-                timestamp,
-                interpretation,
-                details: detailOptions,
-                recommendations
-            },
-            null,
-            2
-        );
-    };
-
-    const exportCsv = (phValue, phLevel, timestamp, interpretation, detailOptions, recommendations) => {
-        const rows = [
-            ["Parameter", "Value"],
-            ["PH Value", phValue],
-            ["PH Level", phLevel],
-            ["Timestamp", timestamp],
-            ["Interpretation", interpretation],
-            ["Details", detailOptions.join(" | ")],
-            ["Recommendations", recommendations.join(" | ")]
-        ];
-
-        return rows.map((r) => r.join(",")).join("\n");
-    };
-
-    const minPh = 4.0;
-    const maxPh = 7.0;
-
-    const markerPos = Math.min(100, Math.max(0, ((phValue - minPh) / (maxPh - minPh)) * 100));
-
-    const handleExport = async () => {
-
-        const pdfBytes = await exportPdf({
+    const onExportClick = () => {
+        handleExport({
             phValue,
             phLevel,
             timestamp,
@@ -89,67 +57,12 @@ const ResultWithDetailsPage = () => {
             detailOptions,
             recommendations: currentRecommendations
         });
-
-        // 2. JSON
-        const jsonText = exportJson(
-            phValue,
-            phLevel,
-            timestamp,
-            interpretation,
-            detailOptions || [],
-            currentRecommendations || []
-        );
-
-        // 3. CSV
-        const csvText = exportCsv(
-            phValue,
-            phLevel,
-            timestamp,
-            interpretation,
-            detailOptions,
-            currentRecommendations
-        );
-
-        // 4. Create ZIP
-        const zip = new JSZip();
-
-        zip.file("ph-report.pdf", pdfBytes);
-        zip.file("ph-report.json", jsonText);
-        zip.file("ph-report.csv", csvText);
-
-        // 5. Generating ZIP
-        const zipBlob = await zip.generateAsync({ type: "blob" });
-
-        // 6. Download the archive
-        saveAs(zipBlob, "phera-report.zip");
     };
 
-    const handleImportClick = () => {
-        fileInputRef.current?.click();
-    };
+    const minPh = 4.0;
+    const maxPh = 7.0;
 
-    const handleFileUpload = (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-
-        reader.onload = (event) => {
-            try {
-                const jsonData = JSON.parse(event.target.result);
-
-                console.log("Imported data:", jsonData);
-                // Here we can navigate, save data in state, context, etc.
-                // navigate("/result-with-details", { state: jsonData });
-
-            } catch (err) {
-                console.error("Invalid JSON file", err);
-                alert("Invalid JSON file");
-            }
-        };
-
-        reader.readAsText(file);
-    };
+    const markerPos = Math.min(100, Math.max(0, ((phValue - minPh) / (maxPh - minPh)) * 100));
 
     return (
         <>
@@ -165,7 +78,7 @@ const ResultWithDetailsPage = () => {
                                 </div>
                                 <div className={styles.actions}>
                                     <div className={styles.actionsInner} onClick={handleImportClick}><DownloadIcon /></div>
-                                    <div className={styles.actionsInner} onClick={handleExport}><ShareIcon /></div>
+                                    <div className={styles.actionsInner} onClick={onExportClick}><ShareIcon /></div>
                                 </div>
                             </div>
                             <div className={styles.num}>{phValue}</div>
@@ -221,7 +134,7 @@ const ResultWithDetailsPage = () => {
                     </div>
                 </Container>
                 <BottomBlock>
-                    <Button onClick={handleExport}>Export results</Button>
+                    <Button onClick={onExportClick}>Export results</Button>
                     <Button onClick={handleImportClick}>Import results</Button>
 
                     <input
