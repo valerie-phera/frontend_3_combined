@@ -17,6 +17,8 @@ import { saveAs } from "file-saver";
 import JSZip from "jszip";
 import { getInterpretation } from "../../shared/utils/getInterpretation";
 import { getRecommendations } from "../../shared/utils/getRecomendations";
+import logo_PDF from "../../assets/logo_PDF.png";
+
 import styles from "./ResultWithDetailsPageNormal.module.css";
 
 const ResultWithDetailsPageNormal = () => {
@@ -91,8 +93,9 @@ const ResultWithDetailsPageNormal = () => {
             let y = 820;
             const lineHeight = 16;
 
-            const mainBlue = rgb(0.29, 0.56, 0.89);  // #4A90E2
-            const lightBlue = rgb(0.43, 0.78, 1);
+            // const mainBlue = rgb(0.29, 0.56, 0.89);  // #4A90E2
+            const mainColor = rgb(0, 0.2039, 0.2392);  // #00343D`
+            // const lightBlue = rgb(0.43, 0.78, 1);
             const gray = rgb(0.4, 0.4, 0.4);
             const borderColor = rgb(0.9, 0.9, 0.95);
 
@@ -147,7 +150,7 @@ const ResultWithDetailsPageNormal = () => {
                     y,
                     size: 14,
                     font,
-                    color: mainBlue
+                    color: mainColor
                 });
 
                 y -= 20;
@@ -162,7 +165,7 @@ const ResultWithDetailsPageNormal = () => {
                 y: 780,
                 width: 595,
                 height: 70,
-                color: mainBlue
+                color: mainColor
             });
 
             page.drawText("pHera — Vaginal pH Report", {
@@ -181,7 +184,7 @@ const ResultWithDetailsPageNormal = () => {
                 color: rgb(1, 1, 1)
             });
 
-            y = 760;
+            y = 750;
 
             // ===== MAIN SUMMARY =====
 
@@ -196,11 +199,11 @@ const ResultWithDetailsPageNormal = () => {
             y -= 25;
 
             page.drawText(`pH Value: `, { x: 40, y, size: 14, font });
-            page.drawText(safe(phValue), { x: 120, y, size: 14, font, color: mainBlue });
+            page.drawText(safe(phValue), { x: 120, y, size: 14, font, color: mainColor });
             y -= 18;
 
             page.drawText(`Level: `, { x: 40, y, size: 14, font });
-            page.drawText(safe(phLevel), { x: 120, y, size: 14, font, color: mainBlue });
+            page.drawText(safe(phLevel), { x: 120, y, size: 14, font, color: mainColor });
             y -= 25;
 
             drawLine(40, 550);
@@ -235,6 +238,21 @@ const ResultWithDetailsPageNormal = () => {
                     color: gray
                 }
             );
+
+            // Uploading an image
+            const logoImageBytes = await fetch(logo_PDF).then(res => res.arrayBuffer());
+            const logoImage = await pdfDoc.embedPng(logoImageBytes);
+
+            const logoWidth = 55; // regulate
+            const logoHeight = (logoImage.height / logoImage.width) * logoWidth;
+
+            // Draw the logo on the bottom right
+            page.drawImage(logoImage, {
+                x: 595 - logoWidth - 40,  // right indent
+                y: 35,                    // bottom indent
+                width: logoWidth,
+                height: logoHeight
+            });
 
             return await pdfDoc.save();
         } catch (err) {
@@ -362,8 +380,8 @@ const ResultWithDetailsPageNormal = () => {
                                     <p className={styles.levelPhText}>{phLevel} pH</p>
                                 </div>
                                 <div className={styles.actions}>
-                                    <div className={styles.actionsInner} onClick={handleExport}><DownloadIcon /></div>
-                                    <div className={styles.actionsInner} onClick={handleImportClick}><ShareIcon /></div>
+                                    <div className={styles.actionsInner} onClick={handleImportClick}><DownloadIcon /></div>
+                                    <div className={styles.actionsInner} onClick={handleExport}><ShareIcon /></div>
                                 </div>
                             </div>
                             <div className={styles.num}>{phValue}</div>
