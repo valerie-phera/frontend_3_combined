@@ -1,15 +1,17 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import BottomBlock from "../../components/BottomBlock/BottomBlock";
 import Button from "../../components/Button/Button";
 import Container from "../../components/Container/Container";
 import ArrowRightBlackSmall from "../../assets/icons/ArrowRightBlackSmall";
-import CheckIcon from "../../assets/icons/CheckIcon";
+import PhBadge from "../../components/PhBadge/PhBadge";
 
 import styles from "./TestsHistoryPage.module.css";
 
 const TestsHistoryPage = () => {
     const navigate = useNavigate();
+    const { state } = useLocation();
+    const phLevel = state?.phLevel || "Normal";
 
     return (
         <>
@@ -27,10 +29,7 @@ const TestsHistoryPage = () => {
                             </div>
                             <div className={styles.wrapNum}>
                                 <div className={styles.num}>7.35</div>
-                                <div className={styles.levelPh}>
-                                    <CheckIcon />
-                                    <p className={styles.levelPhText}>Normal pH</p>
-                                </div>
+                                <PhBadge level={phLevel} />
                             </div>
                         </div>
                     </div>

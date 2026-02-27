@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import BottomBlock from "../../components/BottomBlock/BottomBlock";
 import Button from "../../components/Button/Button";
 import Container from "../../components/Container/Container";
-import CheckIcon from "../../assets/icons/CheckIcon";
+import PhBadge from "../../components/PhBadge/PhBadge";
 import DownloadIcon from "../../assets/icons/DownloadIcon";
 import ShareIcon from "../../assets/icons/ShareIcon";
 import ScaleMarker from "../../assets/icons/ScaleMarker";
@@ -81,10 +81,7 @@ const ResultWithoutDetailsPage = () => {
                         <div className={styles.title}>Your pH result</div>
                         <div className={styles.visualBlock}>
                             <div className={styles.visualBlockTop}>
-                                <div className={styles.levelPh}>
-                                    <CheckIcon />
-                                    <p className={styles.levelPhText}>{phLevel} pH</p>
-                                </div>
+                                <PhBadge level={phLevel} />
                                 <div className={styles.actions}>
                                     <div className={styles.actionsInner} onClick={handleImportClick}><DownloadIcon /></div>
                                     <input

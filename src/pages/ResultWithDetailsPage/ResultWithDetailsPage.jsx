@@ -7,10 +7,10 @@ import Container from "../../components/Container/Container";
 
 import ArrowDownGrey from "../../assets/icons/ArrowDownGrey";
 import EditNotesGrey from "../../assets/icons/EditNotesGrey";
-import CheckIcon from "../../assets/icons/CheckIcon";
 import DownloadIcon from "../../assets/icons/DownloadIcon";
 import ShareIcon from "../../assets/icons/ShareIcon";
 import ScaleMarker from "../../assets/icons/ScaleMarker";
+import PhBadge from "../../components/PhBadge/PhBadge";
 
 import { getInterpretation } from "../../shared/utils/getInterpretation";
 import { getRecommendations } from "../../shared/utils/getRecomendations";
@@ -72,10 +72,7 @@ const ResultWithDetailsPage = () => {
                         <h1 className={styles.title}>Your pH result</h1>
                         <div className={styles.visualBlock}>
                             <div className={styles.visualBlockTop}>
-                                <div className={styles.levelPh}>
-                                    <CheckIcon />
-                                    <p className={styles.levelPhText}>{phLevel} pH</p>
-                                </div>
+                                <PhBadge level={phLevel} />
                                 <div className={styles.actions}>
                                     <div className={styles.actionsInner} onClick={handleImportClick}><DownloadIcon /></div>
                                     <div className={styles.actionsInner} onClick={onExportClick}><ShareIcon /></div>

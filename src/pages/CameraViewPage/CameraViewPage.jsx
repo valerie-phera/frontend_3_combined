@@ -123,7 +123,7 @@ const CameraViewPage = () => {
                 <button
                     className={styles.scanBtn}
                     onClick={handleCapture}
-                    disabled={isProcessing}
+                    disabled={isProcessing || !isReady}
                 >
                     {isProcessing ? "Capturing..." : "Simulate auto-capture"}
                 </button>
