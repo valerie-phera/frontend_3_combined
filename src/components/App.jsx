@@ -7,7 +7,7 @@ import CameraViewPage from "../pages/CameraViewPage/CameraViewPage";
 import NotFoundPage from "../pages/NotFoundPage/NotFoundPage";
 import ResultWithoutDetailsPage from "../pages/ResultWithoutDetailsPage/ResultWithoutDetailsPage";
 import AddDetailsPage from "../pages/AddDetailsPage/AddDetailsPage";
-import ResultWithDetailsPageNormal from "../pages/ResultWithDetailsPageNormal/ResultWithDetailsPageNormal";
+import ResultWithDetailsPage from "../pages/ResultWithDetailsPage/ResultWithDetailsPage";
 import SignUpPage from "../pages/SignUpPage/SignUpPage";
 import StartPage from "../pages/StartPage/StartPage";
 import RegistrationStepPassword from "../pages/RegistrationStepPassword/RegistrationStepPassword";
@@ -41,7 +41,7 @@ function App() {
         <Route path="/camera-view" element={<CameraViewPage />} />
         <Route path="/result-without-details" element={<AppLayout><ResultWithoutDetailsPage /></AppLayout>} />
         <Route path="/add-details" element={<AppLayout><AddDetailsPage /></AppLayout>} />
-        <Route path="/result-with-details-normal" element={<AppLayout><ResultWithDetailsPageNormal /></AppLayout>} />
+        <Route path="/result-with-details-normal" element={<AppLayout><ResultWithDetailsPage /></AppLayout>} />
         <Route path="/signup" element={<AppLayout showBack onBack={() => navigate("/result-with-details-normal")}><SignUpPage /></AppLayout>} />
         <Route path="/start" element={<AppLayout showBack onBack={() => navigate("https://phera.digital/")}><StartPage /></AppLayout>} />
         <Route path="/registration/username" element={<AppLayout><RegistrationStepName /></AppLayout>} />
