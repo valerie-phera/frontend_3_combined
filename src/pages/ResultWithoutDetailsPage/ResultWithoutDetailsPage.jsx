@@ -44,10 +44,16 @@ const ResultWithoutDetailsPage = () => {
     }
 
     // Map numerical pH value to descriptive category
+    // const getPhLevel = (ph) => {
+    //     if (ph < 4.8) return "Slightly Low";
+    //     if (ph >= 4.8 && ph <= 6) return "Normal";
+    //     if (ph >= 6.1 && ph <= 6.5) return "Slightly Elevated";
+    //     return "Elevated";
+    // };
+
     const getPhLevel = (ph) => {
-        if (ph < 4.8) return "Slightly Low";
-        if (ph >= 4.8 && ph <= 6) return "Normal";
-        if (ph >= 6.1 && ph <= 6.5) return "Slightly Elevated";
+        if (ph < 4.5) return "Normal";
+        if (ph >= 4.5 && ph <= 4.9) return "Slightly Elevated";
         return "Elevated";
     };
 
