@@ -8,7 +8,6 @@ import Button from "../../components/Button/Button";
 import ButtonReverse from "../../components/ButtonReverse/ButtonReverse";
 import Container from "../../components/Container/Container";
 
-import EditNotesGrey from "../../assets/icons/EditNotesGrey";
 import DownloadIcon from "../../assets/icons/DownloadIcon";
 import InfoCircle_24 from "../../assets/icons/InfoCircle_24";
 import InfoCircleBlack from "../../assets/icons/InfoCircleBlack";
@@ -27,7 +26,8 @@ import {
     findScrollableAncestor,
     getScrollportClipBottom,
 } from "../../shared/utils/scrollAncestor";
-import useDetailsFromState from "../../hooks/useDetailsFromState";
+import { getDetailsAccordionSections } from "../../shared/utils/detailsAccordionSections";
+import DetailsForResultAccordion from "./DetailsForResultAccordion";
 import useExportResults from "../../hooks/useExportResults";
 import useImportJson from "../../hooks/useImportJson";
 import {
@@ -641,10 +641,17 @@ const ResultWithDetailsPage = () => {
         preloadImage(completePageImg);
     }, []);
 
-    const detailOptions = useDetailsFromState(state);
-    const detailsList = detailOptions.map((item, idx) => (
-        <div key={`${item}-${idx}`} className={styles.item}>{item}</div>
-    ));
+    const detailsAccordionSections = getDetailsAccordionSections(state);
+    const detailOptions = detailsAccordionSections.flatMap((section) => section.items);
+    const detailsAccordion = (
+        <DetailsForResultAccordion
+            sections={detailsAccordionSections}
+            state={state}
+        />
+    );
+    const showDetailsAfterLevelNote =
+        phLevel === "Slightly Elevated" || phLevel === "Elevated";
+    const showDetailsAfterInsights = !showDetailsAfterLevelNote;
 
     const phForScale = clampPhDisplay(phValue);
     const { leftPercent: markerLeftPercent, bgPosX: markerBgPosX } = getMarkerLayout(
@@ -872,21 +879,6 @@ const ResultWithDetailsPage = () => {
                             </div>
                         </div>
                         <div className={styles.infoBlock}>
-                            <div className={styles.details}>
-                                <div className={styles.wrapHeading}>
-                                    <h4 className={styles.heading}>Details for this result</h4>
-                                    <button
-                                        className={styles.editBtn}
-                                        onClick={() => navigate("/add-details/basic", { state })}
-                                        aria-label="Edit details"
-                                    >
-                                        <EditNotesGrey />
-                                    </button>
-                                </div>
-                                <div className={styles.wrapDetailslList}>
-                                    {detailsList}
-                                </div>
-                            </div>
                             <div className={styles.data}>
                                 <div ref={insightsStickyHeaderRef} className={styles.insightsStickyHeader}>
                                     <div
@@ -1003,6 +995,7 @@ const ResultWithDetailsPage = () => {
                                                         </div>
                                                     </div>
                                                 ) : null}
+                                                {showDetailsAfterLevelNote ? detailsAccordion : null}
                                             </>
                                         ) : (
                                             <>
@@ -1063,6 +1056,7 @@ const ResultWithDetailsPage = () => {
                                                             </div>
                                                         </div>
                                                     ) : null}
+                                                    {showDetailsAfterLevelNote ? detailsAccordion : null}
                                                 </>
                                             </>
                                         )}
@@ -1190,6 +1184,7 @@ const ResultWithDetailsPage = () => {
                                         </div>
                                     </div>
                                 </div>
+                                {showDetailsAfterInsights ? detailsAccordion : null}
                                 <div
                                     ref={tabScrollStabilizerRef}
                                     className={styles.tabScrollStabilizer}

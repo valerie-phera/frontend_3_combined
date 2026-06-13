@@ -184,6 +184,13 @@
     display: flex;
     flex-direction: column;
     border-radius: 10px;
+    --details-accordion-scroll-margin: 148px;
+}
+
+@media (min-width: 768px) {
+    .data {
+        --details-accordion-scroll-margin: 104px;
+    }
 }
 
 .insightsStickyHeader {
@@ -929,103 +936,257 @@
     transform: rotate(180deg);
 }
 
-.details {
-    padding: 20px 16px;
-    background-color: #FFFFFF;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    max-width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-    overflow-wrap: anywhere;
-
-    border-top: 1px solid var(--main-background-color-border);
-}
-
-
-.wrapDetailslList {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    padding-top: 10px;
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-}
-
-.item {
-    padding: 8px 10px 9px;
-    border: 1px solid var(--main-color);
-    border-radius: 100px;
-    font-size: 14px;
-    color: var(--main-color);
-    max-width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-    white-space: normal;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    /* Fallback for long unbroken strings in some Chrome builds */
-    word-break: break-all;
-}
-
-.editBtn {
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
+.detailsAccordionWrap {
     position: relative;
+    z-index: 0;
+    width: 100%;
+    padding: 20px 0 16px;
+    box-sizing: border-box;
 }
 
-.editBtn::before {
+.detailsAccordionWrap::before {
     content: "";
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 44px;
-    height: 44px;
-    transform: translate(-50%, -50%);
-}
-
-.editBtn::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 44px;
-    height: 44px;
-    transform: translate(-50%, -50%);
-    border-radius: 999px;
-    background-color: #00343D0D;
-    opacity: 0;
-    transition: opacity 140ms ease, transform 140ms ease;
+    left: -9999px;
+    right: -9999px;
+    top: 0;
+    bottom: 0;
+    background: var(--main-background-color);
+    z-index: -1;
     pointer-events: none;
 }
 
-.editBtn>* {
+.detailsAccordion {
+    box-sizing: border-box;
     position: relative;
     z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 345px;
+    margin: 0 auto;
+    padding: 0 8px;
+    overflow: hidden;
+    background: #ffffff;
+    border-radius: 10px;
+    scroll-margin-top: var(--details-accordion-scroll-margin, 148px);
+    scroll-margin-bottom: 12px;
 }
 
-.editBtn:active {
-    transform: scale(0.99);
+.detailsAccordionHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    max-width: 329px;
+    height: 48px;
+    min-height: 48px;
+    flex-shrink: 0;
+    padding: 0;
+    isolation: isolate;
 }
 
-.editBtn:active::after {
-    opacity: 1;
+.detailsAccordionToggle {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+    height: 48px;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    -webkit-tap-highlight-color: transparent;
 }
 
-.editBtn:focus-visible {
+.detailsAccordionToggle:focus-visible {
     outline: 2px solid rgba(47, 142, 150, 0.35);
     outline-offset: 3px;
+    border-radius: 6px;
 }
 
-@media (hover: hover) and (pointer: fine) {
-    .editBtn:hover::after {
-        opacity: 1;
+.detailsAccordionTitle {
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 22px;
+    color: #1f1f1f;
+}
+
+.detailsAccordionIcons {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.detailsAccordionEdit {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 11px;
+    gap: 10px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.detailsAccordionEdit:focus-visible {
+    outline: 2px solid rgba(47, 142, 150, 0.35);
+    outline-offset: 2px;
+    border-radius: 6px;
+}
+
+.detailsAccordionCaret {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    transition: transform 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.detailsAccordionCaret path {
+    transition: fill 0.28s ease;
+}
+
+.detailsAccordionCaretOpen {
+    transform: rotate(180deg);
+}
+
+.detailsAccordionCaretOpen path {
+    fill: #2f8e96;
+}
+
+.detailsAccordionBodyWrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    width: 100%;
+    max-width: 329px;
+    min-height: 0;
+    flex-shrink: 0;
+    transition: grid-template-rows 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.detailsAccordionBodyWrapperOpen {
+    grid-template-rows: 1fr;
+}
+
+.detailsAccordionBodyInner {
+    overflow: hidden;
+    min-height: 0;
+}
+
+.detailsAccordionBody {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 0 16px;
+    box-sizing: border-box;
+}
+
+.detailsAccordionSection {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+    background: #ffffff;
+}
+
+.detailsAccordionSectionTitleRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+}
+
+.detailsAccordionSectionTitle {
+    margin: 0;
+    flex-shrink: 0;
+    font-family: "Cooper Hewitt", sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 21px;
+    color: #252b37;
+}
+
+.detailsAccordionSectionDivider {
+    flex: 1;
+    min-width: 0;
+    height: 0;
+    margin: 0;
+    border: none;
+    border-top: 1px solid #e9eaeb;
+}
+
+.detailsAccordionChips {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: flex-start;
+    gap: 8px;
+    width: 100%;
+    padding: 6px 0 0;
+    box-sizing: border-box;
+}
+
+.detailsAccordionChip {
+    box-sizing: border-box;
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 6px 10px 7px;
+    gap: 6px;
+    background: #ffffff;
+    border: 0.8px solid #00343d;
+    border-radius: 100px;
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 19px;
+    text-align: center;
+    color: #00343d;
+    max-width: 100%;
+    min-width: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .detailsAccordionBodyWrapper,
+    .detailsAccordionCaret,
+    .detailsAccordionCaret path {
+        transition: none !important;
     }
 }
 
