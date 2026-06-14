@@ -428,6 +428,7 @@
     padding: 20px 8px;
     gap: 10px;
     background: var(--ph-level-note-bg, rgba(82, 99, 56, 0.12));
+    /* border: 1px solid #526338; */
     border-radius: 10px;
     margin-top: 20px;
 }
