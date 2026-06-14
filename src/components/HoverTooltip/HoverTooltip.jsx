@@ -10,7 +10,13 @@ import { useAnchoredPopoverStyle } from "../../shared/hooks/useAnchoredPopoverSt
 import tooltipStyles from "../InfoTooltip/InfoTooltip.module.css";
 import styles from "./HoverTooltip.module.css";
 
-const HoverTooltip = ({ content, children, className = "" }) => {
+const HoverTooltip = ({
+    content,
+    children,
+    className = "",
+    contentClassName = "",
+    fitContent = false,
+}) => {
     const [open, setOpen] = useState(false);
     const anchorRef = useRef(null);
     const popoverRef = useRef(null);
@@ -49,11 +55,14 @@ const HoverTooltip = ({ content, children, className = "" }) => {
         createPortal(
             <div
                 ref={popoverRef}
-                className={`${tooltipStyles.popover} ${tooltipStyles.popoverPortaled}`}
+                className={`${tooltipStyles.popover} ${tooltipStyles.popoverPortaled}`.trim()}
                 style={{
                     top: popoverStyle?.top ?? 0,
                     left: popoverStyle?.left ?? 0,
                     maxWidth: popoverStyle?.maxWidth,
+                    ...(fitContent
+                        ? { width: "max-content", display: "flex", alignItems: "center" }
+                        : {}),
                     visibility:
                         popoverStyle?.visible === false
                             ? "hidden"
@@ -68,7 +77,11 @@ const HoverTooltip = ({ content, children, className = "" }) => {
                 }}
                 role="tooltip"
             >
-                <div className={tooltipStyles.content}>{content}</div>
+                <div
+                    className={`${tooltipStyles.content} ${contentClassName}`.trim()}
+                >
+                    {content}
+                </div>
                 <span className={tooltipStyles.popoverArrow} />
             </div>,
             document.body,

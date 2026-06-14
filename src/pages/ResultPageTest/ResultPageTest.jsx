@@ -31,6 +31,7 @@ import {
 } from "../../shared/utils/phScaleMarker";
 
 import HoverTooltip from "../../components/HoverTooltip/HoverTooltip";
+import hoverTooltipStyles from "../../components/HoverTooltip/HoverTooltip.module.css";
 import styles from "./ResultPageTest.module.css";
 
 const MIN_PH = PH_SCALE_MIN;
@@ -264,27 +265,44 @@ const ResultPageTest = () => {
                                     <div className={styles.cardTop}>
                                         <PhBadge level={phLevel} variant="result" />
                                         <div className={styles.actions}>
-                                            <button
-                                                type="button"
-                                                className={styles.actionsInner}
-                                                aria-expanded={infoOpen}
-                                                aria-controls="result-ph-info"
-                                                onClick={() => setInfoOpen((v) => !v)}
+                                            <HoverTooltip
+                                                content={
+                                                    <>
+                                                        <span>pH range</span>
+                                                        <span>info</span>
+                                                    </>
+                                                }
+                                                contentClassName={`${hoverTooltipStyles.contentEmphasis} ${hoverTooltipStyles.contentPhRangeInfo}`}
+                                                fitContent
                                             >
-                                                <span
-                                                    className={`${styles.infoIconWrap} ${infoOpen ? styles.infoIconWrapActive : ""}`}
+                                                <button
+                                                    type="button"
+                                                    className={styles.actionsInner}
+                                                    aria-expanded={infoOpen}
+                                                    aria-controls="result-ph-info"
+                                                    onClick={() => setInfoOpen((v) => !v)}
                                                 >
-                                                    <InfoCircle_24 />
-                                                </span>
-                                            </button>
-                                            <button
-                                                type="button"
-                                                className={styles.actionsInner}
-                                                onClick={onExportClick}
-                                                aria-label="Download results"
+                                                    <span
+                                                        className={`${styles.infoIconWrap} ${infoOpen ? styles.infoIconWrapActive : ""}`}
+                                                    >
+                                                        <InfoCircle_24 />
+                                                    </span>
+                                                </button>
+                                            </HoverTooltip>
+                                            <HoverTooltip
+                                                content="Save result"
+                                                contentClassName={hoverTooltipStyles.contentEmphasis}
+                                                fitContent
                                             >
-                                                <DownloadIcon />
-                                            </button>
+                                                <button
+                                                    type="button"
+                                                    className={styles.actionsInner}
+                                                    onClick={onExportClick}
+                                                    aria-label="Download results"
+                                                >
+                                                    <DownloadIcon />
+                                                </button>
+                                            </HoverTooltip>
                                         </div>
                                     </div>
 

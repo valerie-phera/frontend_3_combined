@@ -20,6 +20,8 @@ import ArrowUp_14 from "../../assets/icons/ArrowUp_14";
 import InfoCircle_14 from "../../assets/icons/InfoCircle_14";
 import PhonendoscopeIcon from "../../assets/icons/PhonendoscopeIcon";
 import PhBadge from "../../components/PhBadge/PhBadge";
+import HoverTooltip from "../../components/HoverTooltip/HoverTooltip";
+import hoverTooltipStyles from "../../components/HoverTooltip/HoverTooltip.module.css";
 
 import { getInterpretationParts } from "../../shared/utils/getInterpretation";
 import {
@@ -781,27 +783,44 @@ const ResultWithDetailsPage = () => {
                             <div className={styles.visualBlockTop}>
                                 <PhBadge level={phLevel} variant="result" />
                                 <div className={styles.actions}>
-                                    <button
-                                        type="button"
-                                        className={styles.actionsInner}
-                                        aria-expanded={infoOpen}
-                                        aria-controls="result-with-details-ph-info"
-                                        onClick={() => setInfoOpen((v) => !v)}
+                                    <HoverTooltip
+                                        content={
+                                            <>
+                                                <span>pH range</span>
+                                                <span>info</span>
+                                            </>
+                                        }
+                                        contentClassName={`${hoverTooltipStyles.contentEmphasis} ${hoverTooltipStyles.contentPhRangeInfo}`}
+                                        fitContent
                                     >
-                                        <span
-                                            className={`${phInfoStyles.infoIconWrap} ${infoOpen ? phInfoStyles.infoIconWrapActive : ""}`}
+                                        <button
+                                            type="button"
+                                            className={styles.actionsInner}
+                                            aria-expanded={infoOpen}
+                                            aria-controls="result-with-details-ph-info"
+                                            onClick={() => setInfoOpen((v) => !v)}
                                         >
-                                            <InfoCircle_24 />
-                                        </span>
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className={styles.actionsInner}
-                                        onClick={onExportClick}
-                                        aria-label="Download results"
+                                            <span
+                                                className={`${phInfoStyles.infoIconWrap} ${infoOpen ? phInfoStyles.infoIconWrapActive : ""}`}
+                                            >
+                                                <InfoCircle_24 />
+                                            </span>
+                                        </button>
+                                    </HoverTooltip>
+                                    <HoverTooltip
+                                        content="Save result"
+                                        contentClassName={hoverTooltipStyles.contentEmphasis}
+                                        fitContent
                                     >
-                                        <DownloadIcon />
-                                    </button>
+                                        <button
+                                            type="button"
+                                            className={styles.actionsInner}
+                                            onClick={onExportClick}
+                                            aria-label="Download results"
+                                        >
+                                            <DownloadIcon />
+                                        </button>
+                                    </HoverTooltip>
                                     <input
                                         ref={fileInputRef}
                                         type="file"
