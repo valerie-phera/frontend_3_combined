@@ -69,10 +69,9 @@ const HomePageTest = () => {
                   <ClockIcon />
                 </div>
                 <div className={styles.rowText}>
-                  <div className={styles.rowTitle}>Session data is temporary</div>
+                  <div className={styles.rowTitle}>Data from this session</div>
                   <div className={styles.rowBody}>
-                    Without an account, your session data is not stored between
-                    sessions and is not used to identify you across visits.
+                    A session is a single visit to pHera. Without an account, data from this session is not stored and cannot be used to identify you across visits.
                   </div>
                 </div>
               </div>

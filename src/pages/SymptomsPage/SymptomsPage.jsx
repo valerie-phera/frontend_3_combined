@@ -646,7 +646,7 @@ const SymptomsPage = () => {
                                 </h1>
                             </div>
                             <p className={`${basicStyles.subtitle} ${styles.subtitle}`}>
-                                Select what applies in the last 48 hours.
+                                Select what applies in the last 48 hours - leave the rest.
                             </p>
                         </div>
 
@@ -749,14 +749,14 @@ const SymptomsPage = () => {
 
                             <SymptomsAccordion
                                 skipped={isSkipped}
-                                title="Sex & fluids"
+                                title="Sex & fluid contact"
                                 icon={<HeartIcon aria-hidden />}
                                 isOpen={openSections[SECTION_KEYS.sexFluids]}
                                 onToggle={() =>
                                     toggleSection(SECTION_KEYS.sexFluids)
                                 }
                                 selectionLabel={getSymptomsHeaderSelection(sexFluids)}
-                                infoText="Semen and saliva temporarily affect pH - knowing this makes your result more accurate."
+                                infoText="This is about fluid contact - semen or saliva - not sexual activity itself. Both can temporarily shift your pH."
                             >
                                 <SexFluids
                                     selected={sexFluids}
