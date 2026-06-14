@@ -4,6 +4,10 @@ import analyzingDataPageImg from "../../assets/images/analyzingDataPageImg.webp"
 
 import Container from "../../components/Container/Container";
 import ImageWrapper from "../../components/ImageWrapper/ImageWrapper";
+import {
+    IMAGE_DISPLAY_MAX_WIDTH,
+    IMAGE_INTRINSIC_SIZES,
+} from "../../shared/utils/imageIntrinsicSizes";
 
 import CheckIcon_16 from "../../assets/icons/CheckIcon_16";
 import CheckCircle from "../../assets/icons/CheckCircle";
@@ -343,8 +347,9 @@ const AnalyzingData = () => {
                             <ImageWrapper
                                 src={analyzingDataPageImg}
                                 alt="Analyzing Data Img"
-                                width={243}
-                                height={235}
+                                width={IMAGE_INTRINSIC_SIZES.analyzingDataPageImg.width}
+                                height={IMAGE_INTRINSIC_SIZES.analyzingDataPageImg.height}
+                                maxWidth={IMAGE_DISPLAY_MAX_WIDTH.analyzingDataPageImg}
                                 priority
                             />
                         </div>

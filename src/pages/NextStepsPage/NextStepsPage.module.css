@@ -21,17 +21,18 @@
 .imgWrap {
     display: flex;
     justify-content: center;
+    align-items: flex-start;
 }
 
 .img {
     align-items: center;
     max-width: 282px;
-    max-height: 288px;
 }
 
 .img img {
+    display: block;
     width: 100%;
-    height: 100%;
+    height: auto;
 }
 
 .textBlock {

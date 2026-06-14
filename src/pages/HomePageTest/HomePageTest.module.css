@@ -23,15 +23,15 @@
 
 .topImage {
     width: 78px;
-    height: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex: none;
 }
 
 .topImage img {
     width: 100%;
-    height: 100%;
+    height: auto;
     object-fit: contain;
 }
 

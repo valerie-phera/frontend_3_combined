@@ -177,14 +177,16 @@
     top: 50%;
     width: 1440px;
     height: 852px;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) translateZ(0);
     transform-origin: center center;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
   }
 
   /* Primary: container-query units scale to available stage space */
   @supports (width: 1cqw) and (height: 1cqh) {
     .desktopStageSceneInner {
-      transform: translate(-50%, -50%)
+      transform: translate(-50%, -50%) translateZ(0)
         scale(min(1, min(100cqw / 1440px, 100cqh / 852px)));
     }
   }
@@ -192,7 +194,7 @@
   /* Fallback: older Firefox/Chromium without cqw/cqh */
   @supports not (width: 1cqw) {
     .desktopStageSceneInner {
-      transform: translate(-50%, -50%)
+      transform: translate(-50%, -50%) translateZ(0)
         scale(min(1, min(100vw / 1440px, 100vh / 852px)));
     }
   }
@@ -487,7 +489,8 @@
     height: 0;
     min-height: 0;
     width: 100%;
-    overflow: hidden;
+    /* Let .screen (rounded mask) be the only clipper — hidden here caused Safari Mac to crop scaled content */
+    overflow: visible;
     background: #fff;
   }
 }

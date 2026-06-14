@@ -4,6 +4,10 @@ import completePageImg from "../../assets/images/completePageImg.webp"
 import Button from "../../components/Button/Button";
 import Container from "../../components/Container/Container";
 import ImageWrapper from "../../components/ImageWrapper/ImageWrapper";
+import {
+    IMAGE_DISPLAY_MAX_WIDTH,
+    IMAGE_INTRINSIC_SIZES,
+} from "../../shared/utils/imageIntrinsicSizes";
 import TryAgainIcon from "../../assets/icons/TryAgainIcon";
 import { useDeviceFrame } from "../../components/Layout/DeviceFrame/DeviceFrame";
 import ResultWithDetailsPage from "../ResultWithDetailsPage/ResultWithDetailsPage";
@@ -29,8 +33,9 @@ const TestCompletePage = () => {
                             <ImageWrapper
                                 src={completePageImg}
                                 alt="Home page img"
-                                width={243}
-                                height={280}
+                                width={IMAGE_INTRINSIC_SIZES.completePageImg.width}
+                                height={IMAGE_INTRINSIC_SIZES.completePageImg.height}
+                                maxWidth={IMAGE_DISPLAY_MAX_WIDTH.completePageImg}
                                 priority
                             />
                         </div>

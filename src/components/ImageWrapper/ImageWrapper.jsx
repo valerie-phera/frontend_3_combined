@@ -2,8 +2,15 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { isImageCached, preloadImage } from "../../shared/utils/preloadImage";
 import styles from "./ImageWrapper.module.css";
 
-const ImageWrapper = ({ src, alt, width, height, priority = false }) => {
-    const hasDimensions = Number(width) > 0 && Number(height) > 0;
+/**
+ * Responsive illustration. Pass intrinsic asset pixels as width/height;
+ * maxWidth sets the on-screen cap (defaults to width).
+ */
+const ImageWrapper = ({ src, alt, width, height, maxWidth, priority = false }) => {
+    const hasIntrinsic = Number(width) > 0 && Number(height) > 0;
+    const displayMax = maxWidth ?? width;
+    const hasDisplayCap = Number(displayMax) > 0;
+
     const imgRef = useRef(null);
     const [loaded, setLoaded] = useState(() => isImageCached(src));
 
@@ -33,26 +40,25 @@ const ImageWrapper = ({ src, alt, width, height, priority = false }) => {
 
     const markLoaded = () => setLoaded(true);
 
+    const wrapperStyle = {};
+    if (hasDisplayCap) {
+        wrapperStyle.maxWidth = `${displayMax}px`;
+    }
+    if (hasIntrinsic) {
+        wrapperStyle.aspectRatio = `${width} / ${height}`;
+    }
+
     return (
         <div
-            className={`${styles.img} ${loaded ? styles.imgReady : styles.imgPending}`}
-            style={
-                hasDimensions
-                    ? {
-                          aspectRatio: `${width} / ${height}`,
-                          maxWidth: width,
-                      }
-                    : undefined
-            }
+            className={`${styles.img} ${hasIntrinsic ? styles.imgHasRatio : ""} ${loaded ? styles.imgReady : styles.imgPending}`}
+            style={Object.keys(wrapperStyle).length ? wrapperStyle : undefined}
         >
             <img
                 ref={imgRef}
                 src={src}
                 alt={alt}
-                width={hasDimensions ? width : undefined}
-                height={hasDimensions ? height : undefined}
                 loading={priority ? "eager" : "lazy"}
-                decoding={priority ? "sync" : "async"}
+                decoding="async"
                 fetchPriority={priority ? "high" : "auto"}
                 className={`${styles.imgEl} ${loaded ? styles.imgElVisible : ""}`}
                 onLoad={markLoaded}

@@ -5,6 +5,7 @@ import homePageImg from "../../assets/images/homePageImg.webp";
 import Button from "../../components/Button/Button";
 import Container from "../../components/Container/Container";
 import ImageWrapper from "../../components/ImageWrapper/ImageWrapper";
+import { IMAGE_INTRINSIC_SIZES } from "../../shared/utils/imageIntrinsicSizes";
 import BottomBlock from "../../components/BottomBlock/BottomBlock";
 
 import ShieldIcon from "../../assets/icons/ShieldIcon";
@@ -34,7 +35,12 @@ const HomePageTest = () => {
         <Container>
           <div className={styles.section}>
             <div className={styles.topImage}>
-              <ImageWrapper src={homePageImg} alt="Home page" />
+              <ImageWrapper
+                src={homePageImg}
+                alt="Home page"
+                width={IMAGE_INTRINSIC_SIZES.homePageImg.width}
+                height={IMAGE_INTRINSIC_SIZES.homePageImg.height}
+              />
             </div>
 
             <div className={styles.textBlock}>

@@ -643,16 +643,12 @@ const ResultWithDetailsPage = () => {
 
     const detailsAccordionSections = getDetailsAccordionSections(state);
     const detailOptions = detailsAccordionSections.flatMap((section) => section.items);
-    const detailsAccordion = (
+    const renderDetailsAccordion = () => (
         <DetailsForResultAccordion
             sections={detailsAccordionSections}
             state={state}
         />
     );
-    const showDetailsAfterLevelNote =
-        phLevel === "Slightly Elevated" || phLevel === "Elevated";
-    const showDetailsAfterInsights = !showDetailsAfterLevelNote;
-
     const phForScale = clampPhDisplay(phValue);
     const { leftPercent: markerLeftPercent, bgPosX: markerBgPosX } = getMarkerLayout(
         phForScale,
@@ -997,7 +993,6 @@ const ResultWithDetailsPage = () => {
                                                         </div>
                                                     </div>
                                                 ) : null}
-                                                {showDetailsAfterLevelNote ? detailsAccordion : null}
                                             </>
                                         ) : (
                                             <>
@@ -1060,10 +1055,10 @@ const ResultWithDetailsPage = () => {
                                                             </div>
                                                         </div>
                                                     ) : null}
-                                                    {showDetailsAfterLevelNote ? detailsAccordion : null}
                                                 </>
                                             </>
                                         )}
+                                        {renderDetailsAccordion()}
                                     </div>
 
                                     <div
@@ -1107,6 +1102,7 @@ const ResultWithDetailsPage = () => {
                                                 </section>
                                             ))}
                                         </div>
+                                        {renderDetailsAccordion()}
                                     </div>
 
                                     <div
@@ -1186,9 +1182,9 @@ const ResultWithDetailsPage = () => {
                                                 </div>
                                             </div>
                                         </div>
+                                        {renderDetailsAccordion()}
                                     </div>
                                 </div>
-                                {showDetailsAfterInsights ? detailsAccordion : null}
                                 <div
                                     ref={tabScrollStabilizerRef}
                                     className={styles.tabScrollStabilizer}
