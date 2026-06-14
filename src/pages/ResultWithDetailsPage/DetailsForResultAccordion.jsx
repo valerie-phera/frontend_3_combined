@@ -2,19 +2,27 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ArrowDown from "../../assets/icons/ArrowDown";
 import EditNotesGrey from "../../assets/icons/EditNotesGrey";
+import { scrollOpenedSectionIntoView } from "../../shared/utils/scrollAncestor";
 import styles from "./ResultWithDetailsPage.module.css";
 
-const OPEN_ANIMATION_MS = 420;
+const OPEN_ANIMATION_MS = 640;
+// const OPEN_ANIMATION_MS = 1640;
+const REVEAL_SCROLL_MS = OPEN_ANIMATION_MS;
 
-const scrollAccordionIntoView = (rootEl) => {
-    if (!rootEl) return;
+const revealAccordionIfNeeded = (scrollTargetEl, marginSourceEl) => {
+    if (!scrollTargetEl) return () => {};
 
-    requestAnimationFrame(() => {
-        try {
-            rootEl.scrollIntoView({ behavior: "auto", block: "start", inline: "nearest" });
-        } catch {
-            rootEl.scrollIntoView();
-        }
+    const marginEl = marginSourceEl ?? scrollTargetEl;
+    const scrollMarginTop = Number.parseFloat(window.getComputedStyle(marginEl).scrollMarginTop);
+    const clearanceTop =
+        Number.isFinite(scrollMarginTop) && scrollMarginTop > 0 ? scrollMarginTop : 8;
+
+    return scrollOpenedSectionIntoView(scrollTargetEl, {
+        clearanceTop,
+        clearanceBottom: 12,
+        durationMs: REVEAL_SCROLL_MS,
+        startDelayMs: 0,
+        scrollStrategy: "alignTop",
     });
 };
 
@@ -23,8 +31,15 @@ const DetailsForResultAccordion = ({ sections, state }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isInert, setIsInert] = useState(true);
     const rootRef = useRef(null);
+    const headerRef = useRef(null);
     const bodyWrapperRef = useRef(null);
     const prevOpenRef = useRef(isOpen);
+    const cancelScrollRef = useRef(null);
+
+    const stopRevealScroll = () => {
+        cancelScrollRef.current?.();
+        cancelScrollRef.current = null;
+    };
 
     const onEditClick = (e) => {
         e.stopPropagation();
@@ -33,6 +48,7 @@ const DetailsForResultAccordion = ({ sections, state }) => {
 
     const onToggle = () => {
         if (isOpen) {
+            stopRevealScroll();
             setIsInert(true);
             setIsOpen(false);
             return;
@@ -51,14 +67,26 @@ const DetailsForResultAccordion = ({ sections, state }) => {
         let cancelled = false;
         let didScroll = false;
 
+        const revealSection = () => {
+            if (cancelled || didScroll || wasOpen || !isOpen) return;
+
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    if (cancelled || didScroll) return;
+                    didScroll = true;
+                    stopRevealScroll();
+                    cancelScrollRef.current = revealAccordionIfNeeded(
+                        headerRef.current ?? rootRef.current,
+                        rootRef.current
+                    );
+                });
+            });
+        };
+
         const finishOpen = () => {
             if (cancelled) return;
-
             setIsInert(false);
-
-            if (wasOpen || !isOpen || didScroll) return;
-            didScroll = true;
-            scrollAccordionIntoView(rootRef.current);
+            revealSection();
         };
 
         const finishClose = () => {
@@ -94,10 +122,12 @@ const DetailsForResultAccordion = ({ sections, state }) => {
         };
     }, [isOpen]);
 
+    useEffect(() => () => stopRevealScroll(), []);
+
     return (
         <div className={styles.detailsAccordionWrap}>
             <div ref={rootRef} className={styles.detailsAccordion}>
-                <div className={styles.detailsAccordionHeader}>
+                <div ref={headerRef} className={styles.detailsAccordionHeader}>
                     <button
                         type="button"
                         className={styles.detailsAccordionToggle}

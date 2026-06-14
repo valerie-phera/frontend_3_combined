@@ -956,16 +956,18 @@ const ResultWithDetailsPage = () => {
                                         </div>
                                         {overviewParagraphs.length > 0 ? (
                                             <>
-                                                <div className={styles.wrapText} onClick={handleInsightContentClick}>
-                                                    {overviewParagraphs.map((t, index) => (
-                                                        <div key={index} className={styles.text}>
-                                                            <div className={styles.point} />
-                                                            <p
-                                                                className={styles.innerText}
-                                                                dangerouslySetInnerHTML={{ __html: t }}
-                                                            />
-                                                        </div>
-                                                    ))}
+                                                <div className={styles.wrapTextShell}>
+                                                    <div className={styles.wrapText} onClick={handleInsightContentClick}>
+                                                        {overviewParagraphs.map((t, index) => (
+                                                            <div key={index} className={styles.text}>
+                                                                <div className={styles.point} />
+                                                                <p
+                                                                    className={styles.innerText}
+                                                                    dangerouslySetInnerHTML={{ __html: t }}
+                                                                />
+                                                            </div>
+                                                        ))}
+                                                    </div>
                                                 </div>
                                                 {phLevel === "Slightly Elevated" || phLevel === "Elevated" ? (
                                                     <div
@@ -1001,32 +1003,34 @@ const ResultWithDetailsPage = () => {
                                             <>
                                                 <h4 className={styles.overviewTitle}>Your microbiome looks balanced.</h4>
                                                 <>
-                                                    <div className={styles.wrapText} onClick={handleInsightContentClick}>
-                                                        {[
-                                                            "Your pH is maintained by Lactobacillus - good bacteria that produce lactic acid to fight off infections",
-                                                            "Your pH is maintained by Lactobacillus - good bacteria that produce lactic acid to fight off infections",
-                                                            "Your pH is maintained by Lactobacillus - good bacteria that produce lactic acid to fight off infections",
-                                                            "Your pH is maintained by Lactobacillus - good bacteria that produce lactic acid to fight off infections",
-                                                        ].map((t, index) => (
-                                                            <div key={index} className={styles.text}>
-                                                                <div className={styles.point} />
-                                                                <p className={styles.innerText}>
-                                                                    {t}{" "}
-                                                                    <button
-                                                                        type="button"
-                                                                        className={styles.bracketRefLink}
-                                                                        data-citation-ref="2"
-                                                                        aria-label="View source 2"
-                                                                    >
-                                                                        [2]
-                                                                    </button>
-                                                                    .
-                                                                </p>
-                                                            </div>
-                                                        ))}
-                                                        <p className={styles.overviewNote}>
-                                                            Consult your healthcare provider can help ensure everything is as it should be.
-                                                        </p>
+                                                    <div className={styles.wrapTextShell}>
+                                                        <div className={styles.wrapText} onClick={handleInsightContentClick}>
+                                                            {[
+                                                                "Your pH is maintained by Lactobacillus - good bacteria that produce lactic acid to fight off infections",
+                                                                "Your pH is maintained by Lactobacillus - good bacteria that produce lactic acid to fight off infections",
+                                                                "Your pH is maintained by Lactobacillus - good bacteria that produce lactic acid to fight off infections",
+                                                                "Your pH is maintained by Lactobacillus - good bacteria that produce lactic acid to fight off infections",
+                                                            ].map((t, index) => (
+                                                                <div key={index} className={styles.text}>
+                                                                    <div className={styles.point} />
+                                                                    <p className={styles.innerText}>
+                                                                        {t}{" "}
+                                                                        <button
+                                                                            type="button"
+                                                                            className={styles.bracketRefLink}
+                                                                            data-citation-ref="2"
+                                                                            aria-label="View source 2"
+                                                                        >
+                                                                            [2]
+                                                                        </button>
+                                                                        .
+                                                                    </p>
+                                                                </div>
+                                                            ))}
+                                                            <p className={styles.overviewNote}>
+                                                                Consult your healthcare provider can help ensure everything is as it should be.
+                                                            </p>
+                                                        </div>
                                                     </div>
                                                     {phLevel === "Slightly Elevated" || phLevel === "Elevated" ? (
                                                         <div

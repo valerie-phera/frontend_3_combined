@@ -204,10 +204,21 @@ const DEFAULT_SCROLL_DURATION_MS = 520;
 const SCROLL_START_DELAY_MS = 72;
 
 /** Same feel as accordion transitions: cubic-bezier(0.4, 0, 0.2, 1). */
+// function easeStandard(t) {
+//   const clamped = Math.max(0, Math.min(1, t));
+//   const inv = 1 - clamped;
+//   return 1 - inv * inv * inv;
+// }
+
+// function easeStandard(t) {
+//   return Math.max(0, Math.min(1, t));
+// }
+
 function easeStandard(t) {
   const clamped = Math.max(0, Math.min(1, t));
-  const inv = 1 - clamped;
-  return 1 - inv * inv * inv;
+  return clamped < 0.5
+    ? 4 * clamped * clamped * clamped
+    : 1 - Math.pow(-2 * clamped + 2, 3) / 2;
 }
 
 function prefersReducedMotion() {
@@ -229,7 +240,13 @@ function measureScrollport(el, scroller, clearanceTop, clearanceBottom) {
   return { clipTop, clipBottom, elRect, available };
 }
 
-function computeTargetScrollTop(el, scroller, clearanceTop, clearanceBottom) {
+function computeTargetScrollTop(
+  el,
+  scroller,
+  clearanceTop,
+  clearanceBottom,
+  scrollStrategy = "minimal"
+) {
   const { clipTop, clipBottom, elRect, available } = measureScrollport(
     el,
     scroller,
@@ -240,13 +257,41 @@ function computeTargetScrollTop(el, scroller, clearanceTop, clearanceBottom) {
   const fullyVisible =
     elRect.top >= clipTop && elRect.bottom <= clipBottom;
 
+  if (scrollStrategy === "alignTop") {
+    const scrollDelta = elRect.top - clipTop;
+    if (Math.abs(scrollDelta) < MIN_SCROLL_DELTA_PX) return null;
+
+    return clampScrollTop(scroller, scroller.scrollTop + scrollDelta);
+  }
+
+  if (scrollStrategy === "headerOnly") {
+    if (elRect.top >= clipTop) return null;
+
+    const scrollDelta = elRect.top - clipTop;
+    if (Math.abs(scrollDelta) < MIN_SCROLL_DELTA_PX) return null;
+
+    return clampScrollTop(scroller, scroller.scrollTop + scrollDelta);
+  }
+
   if (fullyVisible) return null;
 
   const currentScroll = scroller.scrollTop;
   let scrollDelta = 0;
 
   if (elRect.height > available) {
-    scrollDelta = elRect.top - clipTop;
+    if (scrollStrategy === "minimal") {
+      if (elRect.top >= clipTop) {
+        if (elRect.bottom > clipBottom) {
+          scrollDelta = elRect.bottom - clipBottom;
+        }
+      } else if (elRect.bottom <= clipBottom) {
+        scrollDelta = elRect.top - clipTop;
+      } else {
+        scrollDelta = elRect.top - clipTop;
+      }
+    } else {
+      scrollDelta = elRect.top - clipTop;
+    }
   } else if (elRect.bottom > clipBottom) {
     scrollDelta = elRect.bottom - clipBottom;
     const projectedTop = elRect.top - scrollDelta;
@@ -317,6 +362,7 @@ export function scrollOpenedSectionIntoView(
     clearanceBottom = DEFAULT_CLEARANCE_BOTTOM,
     durationMs = DEFAULT_SCROLL_DURATION_MS,
     startDelayMs = SCROLL_START_DELAY_MS,
+    scrollStrategy = "minimal",
   } = {}
 ) {
   let cancelled = false;
@@ -339,7 +385,8 @@ export function scrollOpenedSectionIntoView(
       el,
       scroller,
       clearanceTop,
-      clearanceBottom
+      clearanceBottom,
+      scrollStrategy
     );
 
     if (targetScrollTop == null) return;

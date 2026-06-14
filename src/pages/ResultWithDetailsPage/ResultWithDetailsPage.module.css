@@ -34,8 +34,8 @@
     flex-direction: column;
     padding: 20px 16px 24px;
     background-color: #FFFFFF;
-    border-top-right-radius: 10px;
-    border-top-left-radius: 10px;
+    border-radius: 10px;
+    margin-bottom: 20px;
 }
 
 .visualBlockTop {
@@ -403,11 +403,19 @@
     margin-left: 22px;
 }
 
+.wrapTextShell {
+    background-color: var(--main-background-color);
+}
+
 .wrapText {
     display: flex;
     flex-direction: column;
     gap: 8px;
     padding: 10px 8px 20px;
+    background-color: #FFFFFF;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    overflow: hidden;
 }
 
 .phResultCardLevelNote {
@@ -420,7 +428,6 @@
     padding: 20px 8px;
     gap: 10px;
     background: var(--ph-level-note-bg, rgba(82, 99, 56, 0.12));
-    border: 1px solid var(--ph-level-note-border, #526338);
     border-radius: 10px;
     margin-top: 20px;
 }
@@ -942,6 +949,9 @@
     width: 100%;
     padding: 20px 0 16px;
     box-sizing: border-box;
+    overflow-anchor: none;
+    --details-accordion-duration: 640ms;
+    --details-accordion-ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .detailsAccordionWrap::before {
@@ -972,6 +982,7 @@
     border-radius: 10px;
     scroll-margin-top: var(--details-accordion-scroll-margin, 148px);
     scroll-margin-bottom: 12px;
+    overflow-anchor: none;
 }
 
 .detailsAccordionHeader {
@@ -1064,11 +1075,11 @@
     width: 24px;
     height: 24px;
     flex-shrink: 0;
-    transition: transform 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform var(--details-accordion-duration) var(--details-accordion-ease);
 }
 
 .detailsAccordionCaret path {
-    transition: fill 0.28s ease;
+    transition: fill 0.42s ease;
 }
 
 .detailsAccordionCaretOpen {
@@ -1086,16 +1097,23 @@
     max-width: 329px;
     min-height: 0;
     flex-shrink: 0;
-    transition: grid-template-rows 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-anchor: none;
+    transition: grid-template-rows var(--details-accordion-duration) var(--details-accordion-ease);
 }
 
 .detailsAccordionBodyWrapperOpen {
     grid-template-rows: 1fr;
+    transition: grid-template-rows var(--details-accordion-duration) var(--details-accordion-ease);
 }
 
 .detailsAccordionBodyInner {
     overflow: hidden;
     min-height: 0;
+    overflow-anchor: none;
+}
+
+.detailsAccordionBodyWrapperOpen .detailsAccordionBodyInner {
+    padding-top: 1px;
 }
 
 .detailsAccordionBody {
@@ -1106,6 +1124,16 @@
     width: 100%;
     padding: 10px 0 16px;
     box-sizing: border-box;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition:
+        opacity var(--details-accordion-duration) var(--details-accordion-ease),
+        transform var(--details-accordion-duration) var(--details-accordion-ease);
+}
+
+.detailsAccordionBodyWrapperOpen .detailsAccordionBody {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .detailsAccordionSection {
@@ -1143,6 +1171,12 @@
     margin: 0;
     border: none;
     border-top: 1px solid #e9eaeb;
+    opacity: 0;
+    transition: opacity var(--details-accordion-duration) var(--details-accordion-ease);
+}
+
+.detailsAccordionBodyWrapperOpen .detailsAccordionSectionDivider {
+    opacity: 1;
 }
 
 .detailsAccordionChips {
@@ -1185,8 +1219,24 @@
 @media (prefers-reduced-motion: reduce) {
     .detailsAccordionBodyWrapper,
     .detailsAccordionCaret,
-    .detailsAccordionCaret path {
+    .detailsAccordionCaret path,
+    .detailsAccordionBody,
+    .detailsAccordionSectionDivider {
         transition: none !important;
+    }
+
+    .detailsAccordionBodyWrapper:not(.detailsAccordionBodyWrapperOpen) .detailsAccordionBody {
+        opacity: 0;
+        transform: none;
+    }
+
+    .detailsAccordionBodyWrapperOpen .detailsAccordionBody {
+        opacity: 1;
+        transform: none;
+    }
+
+    .detailsAccordionBodyWrapperOpen .detailsAccordionSectionDivider {
+        opacity: 1;
     }
 }
 
